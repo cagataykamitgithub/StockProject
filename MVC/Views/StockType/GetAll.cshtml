@@ -1,0 +1,72 @@
+﻿@using Entities.Concrete;
+@model StockTypeViewModel
+@{
+    Layout = "_Layout";
+}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Stok Yönetimi /</span> Stok Türleri
+    </h4>
+    <div id="modalPlaceHolder" aria-hidden="true"></div>
+    <!-- Basic Bootstrap Table -->
+    <div class="card">
+        <h5 class="card-header">Stok Türü Listesi</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-bordered" id="articlesTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Başlık</th>
+                        <th>Durum</th>
+                        <th>SİLİNDİ Mİ?</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Başlık</th>
+                        <th>Durum</th>
+                        <th>SİLİNDİ Mİ?</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </tfoot>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model.LstStock)
+                    {
+                        <tr name=@item.Id>
+                            <th>@item.Name</th>
+                            <th>@(item.IsActive ? "Aktif" : "Aktif Değil")</th>
+                            <th>@(item.Deleted ? "Evet" : "Hayır")</th>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                        data-target="#updateStockTypeModal-@item.Id" data-url="@Url.Action("Update", "StockType", new { id = item.Id })">
+                                    <span class="bi bi-pencil-square"></span>
+                                </button>
+
+                                @* Update Modalını açmak için *@
+                                @await Html.PartialAsync("_UpdateStockTypePartialView",item)
+
+                                @* <button type="button" class="btn btn-sm btn-danger" asp-for="Delete">
+                            <span class="bi bi-trash"></span>
+                            </button> *@
+                                <a href="/StockType/Delete/@item.Id" class="btn btn-sm btn-danger" asp-for="Delete">
+                                    <span class="bi bi-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStockTypeModal">Ekle</button>
+
+            @* Add Modalını açmak için *@
+            @await Html.PartialAsync("_StockTypePartialView",new StockType())
+        </div>
+    </div>
+
+
+
+    @* Tablo yazılarının Türkçeleşmesi için *@
+    @section Scripts{
+        <script src="~/js/stockTypeIndex.js" type="application/ecmascript"></script>
+    }
+

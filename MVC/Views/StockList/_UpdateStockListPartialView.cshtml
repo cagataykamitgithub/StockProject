@@ -34,7 +34,7 @@
                                 </select>
                                 <span asp-validation-for="@item.IdStockClass" class="text-danger"></span>
                             </div>
-
+                            <br />
                             <div class="form-group">
                                 <label asp-for="@item.IdStockType">Stok Türü</label>
                                 <select name="IdStockType" asp-for="@item.IdStockType" asp-items="@Model.StockTypeItems" class="form-control">
@@ -42,7 +42,7 @@
                                 </select>
                                 <span asp-validation-for="@item.IdStockType" class="text-danger"></span>
                             </div>
-
+                            <br />
                             <div class="form-group">
                                 <label asp-for="@item.IdStockUnit">Stok Birim Adı</label>
                                 <select name="IdStockUnit" asp-for="@item.IdStockUnit" asp-items="@Model.StockUnitItems" class="form-control">

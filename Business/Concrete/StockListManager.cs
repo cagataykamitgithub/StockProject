@@ -6,6 +6,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.StockList;
+using System.Linq;
 
 namespace Business.Concrete
 {
@@ -19,7 +20,7 @@ namespace Business.Concrete
 
         public IDataResult<List<StockListWithStockTypeAndStockUnitDto>> GetAll()
         {
-
+            
             return new SuccessDataResult<List<StockListWithStockTypeAndStockUnitDto>>(_stockListDal.GetAllForTable(), Messages.StockListListed);
         }
 
@@ -59,12 +60,41 @@ namespace Business.Concrete
 
         public IDataResult<List<StockListWithStockTypeAndStockUnitDto>> GetAllForTable()
         {
-            return new SuccessDataResult<List<StockListWithStockTypeAndStockUnitDto>>(_stockListDal.GetAllForTable(), Messages.StockTypeListed);
+            // Veritabanından ürünleri alın
+            List<StockListWithStockTypeAndStockUnitDto> stockList = _stockListDal.GetAllForTable();
+
+            // CalculateTotalAmount metodunu kullanarak TotalAmount hesaplamalarını yapın
+            List<StockListWithStockTypeAndStockUnitDto> updatedStockList = CalculateTotalAmount(stockList);
+
+            // Diğer işlemleri gerçekleştirin veya IDataResult olarak döndürün
+            return new SuccessDataResult<List<StockListWithStockTypeAndStockUnitDto>>(updatedStockList, Messages.StockListListed);
+            //return new SuccessDataResult<List<StockListWithStockTypeAndStockUnitDto>>(_stockListDal.GetAllForTable(), Messages.StockTypeListed);
         }
 
         IDataResult<List<StockListDto>> IStockListService.GetAll()
         {
             throw new NotImplementedException();
         }
+        public List<StockListWithStockTypeAndStockUnitDto> CalculateTotalAmount(List<StockListWithStockTypeAndStockUnitDto> stockList)
+        {
+            var uniqueStockUnitIds = stockList.Select(s => s.IdStockUnit).Distinct();
+
+            foreach (var stockUnitId in uniqueStockUnitIds)
+            {
+                var stocksForUnit = stockList.Where(s => s.IdStockUnit == stockUnitId).ToList();
+                decimal totalAmount = stocksForUnit.Sum(s => s.Amount);
+
+                foreach (var stock in stocksForUnit)
+                {
+                    stock.TotalAmount = totalAmount;
+                }
+            }
+
+            return stockList;
+
+        }
+
+       
     }
 }
+

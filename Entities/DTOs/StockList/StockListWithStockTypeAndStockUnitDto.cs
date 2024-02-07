@@ -21,6 +21,8 @@ namespace Entities.DTOs.StockList
 
         public int Amount { get; set; }
 
+        public decimal TotalAmount { get; set; }
+
         public int IdShelf { get; set; }
 
         public int IdCabinet { get; set; }

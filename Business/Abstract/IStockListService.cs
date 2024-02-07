@@ -17,5 +17,6 @@ namespace Business.Abstract
         IResult Update(StockList StockList);
         IResult Delete(StockList StockList);
         IDataResult<List<StockListWithStockTypeAndStockUnitDto>> GetAllForTable();
+        List<StockListWithStockTypeAndStockUnitDto> CalculateTotalAmount(List<StockListWithStockTypeAndStockUnitDto> stockList);
     }
 }
